@@ -91,6 +91,17 @@
         <a href="https://locket.camera/links/VzJ2Lhp9etvsgyAT6"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAJQAlAMBIgACEQEDEQH/xAAaAAEBAAMBAQAAAAAAAAAAAAAAAQQFBgMC/8QAKxABAAIBAgUCBAcAAAAAAAAAAAECAwQRITFBUXEFEiIyQmETUmKRkrHR/8QAGwEBAQEBAQEBAQAAAAAAAAAAAAEDAgQFBwb/xAAhEQEBAAMAAQMFAAAAAAAAAAAAAQIDETESIVEEFEFCYf/aAAwDAQACEQMRAD8A7EEflr+oARQBAEVBBBJlQkQUEA4ggKCCKKIB1lAjN0AgggAIJKhMoqKCAqCAAgigCBQBUZQIydCAAhM7RM9Gl13qd7zNNPPtpH1dZ/xrr15Z32S1uL3pT5rVjzOyVyUv8l628S5eZm072neZ6ym8xxjhPeHo+1ny566pGn0PqV6WjHqLe6s8ItPOGw1urppscT81p+WO7LLVlMuOusjfaN54Q8/xsW+34lP5Q5/PqMue2+S8z9ukPJtPpvmufU6hHO4NRlw2icd5iO3T9m50errqaflvHOrPPTcfdZWQCMgBAAAZQgydCCTKjXes55x4oxVnjfn4aVnesW31sx0rWIYL6WnH04RnfIA0QfVr2vt7pmdo2jw+QAAB66bNODNW9ek8fDyDz7DpYmJrExykeGitNtJin7bPZ87KctjsJkmUQBBUZaCTLJ2TKAo0frNZjV79LViWC3XrOGcmCuSvOk8fEtK+jqy7hGd8gDRAAAAAHpp8U5s1aR1nj4O8G70dfbpcUfpesynKNoR863t66AQBUF4MqZQGTsQFRLRFqzW0bxMbTDntXp7abNNJ41+me8OheGr09dTi9luExxrPaW2nZ6L/ABK54feXHfDknHkja0c3w9zgAAAUG39N084sc5Lx8duUdoY/p+k98xmyR8Eco7tm827Z+sWQBHmUBFBUQGWgM3QggAIpXjqtNTU02twtHK3Zo8+DJgv7ckeJ7uil55sVM1JpkrvH9N9e24+18ObHOjL1Wgvh+Km96d+sMbFjvlt7cdZtP26PXMpZ2OXy2Gi0E22yZ4+HpXv5e+k0FMO1sm1r9O0Mzdhs3fjFeJy5AjzKAigCKAgDKBGToBFBAEATdQl8xERyiI8QsoqAIACKAIoIAAgIygRm7EAQBN1CUJRQBBAEUARQQAEBUBAGUIMnQSgoJPNQEQFRAFEEAEBQQBBAUAFH/9k=" alt="Locket"></a>
     </div>
 </div>
+    <audio id="bg-music" autoplay loop muted>
+    <source src="music/kkk.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+window.addEventListener('click', () => {
+    const audio = document.getElementById('bg-music');
+    audio.muted = false;
+    audio.play();
+}, { once: true });
+</script>
 
 <script>
 /* ===== Sao băng ===== */
@@ -169,3 +180,4 @@ setInterval(createFlyingImage, 800);
 
 </body>
 </html>
+
