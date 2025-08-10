@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đăng nhập</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: url('https://img.wattpad.com/4324d3ce97bb81dd74c32fe4faf0ff098d2d4d70/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f70303556643131776b7337596d413d3d2d36322e3134646534393236633462306531353938303230373630353433372e676966') no-repeat center center fixed;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        background: rgba(255, 255, 255, 0.2); /* Trong suốt */
+        backdrop-filter: blur(10px); /* Làm mờ nền phía sau */
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        width: 300px;
+        text-align: center;
+        color: white;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+    }
+
+    input {
+        width: 90%;
+        padding: 10px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 5px;
+        outline: none;
+    }
+
+    button {
+        background: #ff4e88;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    button:hover {
+        background: #ff2e6a;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Log đi</h2>
+    <form onsubmit="guiForm(event)">
+        <input type="text" id="ten" placeholder="Nhập Tên" required>
+        <input type="text" id="lop" placeholder="Nhập Lớp" required>
+        <button type="submit">Gửi</button>
+    </form>
+</div>
+
+<script>
+function guiForm(e) {
+    e.preventDefault();
+    
+    // Gửi dữ liệu tới Google Form
+    var ten = document.getElementById("ten").value;
+    var lop = document.getElementById("lop").value;
+
+    var formURL = "LINK_GOOGLE_FORM"; // link Google Form
+    var params = new URLSearchParams();
+    params.append("entry.ID_TEN", ten); // Thay ID_TEN bằng entry id thực
+    params.append("entry.ID_LOP", lop); // Thay ID_LOP bằng entry id thực
+
+    fetch(formURL, {
+        method: "POST",
+        mode: "no-cors",
+        body: params
+    });
+
+    // Chuyển sang trang tiếp theo sau khi gửi
+    setTimeout(function(){
+        window.location.href = "a1k23.html"; // Trang tiếp theo
+    }, 500);
+}
+</script>
+</div>
+<audio id="bg-music" autoplay loop muted>
+    <source src="music/chill.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+window.addEventListener('click', () => {
+    const audio = document.getElementById('bg-music');
+    audio.muted = false;
+    audio.play();
+}, { once: true });
+</script>
+
+</body>
+</html>
