@@ -1,92 +1,162 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Màn Chào</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Hạt sáng lấp lánh + Hello</title>
 <style>
-    body {
-        margin: 0;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: white;
-        font-family: 'Poppins', sans-serif;
-        overflow: hidden;
-    }
-    .hello {
-        display: flex;
-        font-size: 150px; /* chữ to hơn */
-        font-weight: 700;
-        color: black;
-        letter-spacing: 8px;
-    }
-    .hello span {
-        display: inline-block;
-        opacity: 0;
-        transform: translateY(150px);
-        animation: flyIn 0.6s forwards ease-out;
-    }
-    /* Delay từng chữ */
-    .hello span:nth-child(1) { animation-delay: 0s; }
-    .hello span:nth-child(2) { animation-delay: 0.2s; }
-    .hello span:nth-child(3) { animation-delay: 0.4s; }
-    .hello span:nth-child(4) { animation-delay: 0.6s; }
-    .hello span:nth-child(5) { animation-delay: 0.8s; }
+  /* cơ bản */
+  html,body{
+    height:100%;
+    margin:0;
+    background: radial-gradient(ellipse at center, #0b0f1a 0%, #000000 70%);
+    overflow:hidden;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
 
-    @keyframes flyIn {
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
+  canvas{ display:block; }
 
-    /* Bay ra */
-    @keyframes flyOut {
-        to {
-            opacity: 0;
-            transform: translateY(-200px);
-        }
-    }
+  /* chữ Hello ở giữa, xuất hiện dần dần */
+  #greeting{
+    position:fixed;
+    left:50%;
+    top:50%;
+    transform:translate(-50%, -50%);
+    pointer-events:none;
+    font-size: clamp(32px, 6vw, 96px);
+    font-weight:700;
+    color: #fff;
+    opacity:0; /* bắt đầu ẩn */
+    text-align:center;
+    letter-spacing: 2px;
+    text-shadow:
+      0 0 8px rgba(255,255,255,0.8),
+      0 0 24px rgba(255,200,80,0.15),
+      0 0 40px rgba(255,200,80,0.07);
+    /* animation fade-in */
+    animation: fadeIn 2.5s ease forwards;
+    animation-delay: 1s; /* bắt đầu xuất hiện sau 1s */
+  }
+
+
+  greeting{
+    animation: fadeIn 2.5s ease forwards, glow 3.5s ease-in-out 3s infinite;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -48%) scale(0.98); }
+    to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
+
+  @keyframes glow {
+    0% { text-shadow: 0 0 6px rgba(255,255,255,0.9); }
+    50% { text-shadow: 0 0 18px rgba(255,200,90,0.9); }
+    100% { text-shadow: 0 0 6px rgba(255,255,255,0.9); }
+  }
 </style>
 </head>
 <body>
-    <div class="hello">
-        <span>H</span>
-        <span>E</span>
-        <span>L</span>
-        <span>L</span>
-        <span>O</span>
-    </div>
+
+<canvas id="sparkCanvas"></canvas>
+<div id="greeting">hello</div>
 
 <script>
-    // Sau 2.5 giây, chữ bay đi
-    setTimeout(() => {
-        document.querySelectorAll('.hello span').forEach((letter, index) => {
-            letter.style.animation = `flyOut 0.6s forwards ease-in`;
-            letter.style.animationDelay = `${index * 0.1}s`;
-        });
-    }, 2500);
+/* === Canvas hạt sáng (như cũ, nhưng tinh chỉnh nhẹ) === */
+const canvas = document.getElementById('sparkCanvas');
+const ctx = canvas.getContext('2d');
+let W = canvas.width = innerWidth;
+let H = canvas.height = innerHeight;
 
-    // Sau 4 giây, chuyển sang trang khác
-    setTimeout(() => {
-        window.location.href = "mlycute.html"; // thay bằng trang bạn muốn
-    }, 4000);
+class Particle {
+  constructor(){
+    this.reset(true);
+  }
+  reset(initial=false){
+    this.x = Math.random()*W;
+    this.y = initial ? Math.random()*H : (Math.random()<0.5 ? -10 : H+10);
+    this.size = Math.random()*3 + 0.8;
+    const speed = 0.1 + Math.random()*0.6;
+    const angle = (Math.PI*2) * Math.random();
+    this.vx = Math.cos(angle) * speed * (0.2 + Math.random());
+    this.vy = Math.sin(angle) * speed * (0.2 + Math.random()*0.6) - 0.05;
+    this.alpha = Math.random()*0.9;
+    this.alphaChange = (Math.random()*0.01 + 0.003) * (Math.random() < 0.5 ? 1 : -1);
+    this.hue = 40 + Math.random()*50; // hơi vàng đến trắng
+  }
+  update(){
+    this.x += this.vx;
+    this.y += this.vy;
+    this.alpha += this.alphaChange;
+    if(this.alpha <= 0.05 || this.alpha >= 1) this.alphaChange *= -1;
+    // rơi ra khỏi màn hình => reset
+    if(this.x < -30 || this.x > W+30 || this.y < -30 || this.y > H+30) this.reset();
+  }
+  draw(){
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.globalAlpha = Math.max(0, Math.min(1, this.alpha));
+    // bloom
+    const grd = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size*8);
+    grd.addColorStop(0, `rgba(255,255,230,${0.35*this.alpha})`);
+    grd.addColorStop(0.2, `rgba(255,220,140,${0.20*this.alpha})`);
+    grd.addColorStop(1, `rgba(255,220,140,0)`);
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size*6, 0, Math.PI*2);
+    ctx.fill();
+
+    // core
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(255,255,255, ${this.alpha})`;
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+const particles = [];
+const NUM = Math.floor(Math.max(80, Math.min(220, (W*H)/15000)));
+for(let i=0;i<NUM;i++) particles.push(new Particle());
+
+function animate(){
+  ctx.clearRect(0,0,W,H);
+  // nhẹ lớp mờ để trails mờ
+  // ctx.fillStyle = 'rgba(0,0,0,0.08)'; ctx.fillRect(0,0,W,H);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* === handle resize === */
+addEventListener('resize',()=>{
+  W = canvas.width = innerWidth;
+  H = canvas.height = innerHeight;
+});
+
+/* === Tùy chọn: điều khiển chữ bằng JS thay vì CSS (nếu muốn điều khiển dần dần) ===
+   - Hiện tại chữ dùng CSS animation. Nếu bạn muốn điều khiển opacity bằng JS (ví dụ: xuất hiện, sau đó lặp ẩn-hiện),
+     uncomment đoạn bên dưới và comment CSS animation trên #greeting.
+*/
+
+/*
+const greet = document.getElementById('greeting');
+let t = 0;
+function fadeLoop(){
+  t += 0.01;
+  // tăng dần tới 1
+  greet.style.opacity = Math.min(1, t);
+  if (t < 1) requestAnimationFrame(fadeLoop);
+}
+setTimeout(()=> requestAnimationFrame(fadeLoop), 800);
+*/
+
 </script>
-
-</div>
-<audio id="bg-music" autoplay loop muted>
-    <source src="music/chill.mp3" type="audio/mpeg">
-</audio>
-
 <script>
-window.addEventListener('click', () => {
-    const audio = document.getElementById('bg-music');
-    audio.muted = false;
-    audio.play();
-}, { once: true });
+setTimeout(function(){
+    window.location.href = "mlycute.html"; // thay bằng tên file trang tiếp theo
+}, 3000); // 4 giây
 </script>
+
+
 </body>
 </html>
